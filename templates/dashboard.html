@@ -1,0 +1,249 @@
+<!-- dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #EAEEF2;
+    --ink: #182430;
+    --seek: #3B6E8F;
+    --seek-dark: #2C5470;
+    --offer: #C9762C;
+    --offer-dark: #A85F1E;
+    --line: #B8C4CC;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    height: 100%;
+    background: var(--paper);
+    font-family: 'Inter', sans-serif;
+    color: var(--ink);
+    overflow: hidden;
+  }
+
+  .header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 28px 40px;
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  .brand {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+
+  .brand span {
+    color: var(--seek);
+  }
+
+  .tagline {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--ink);
+    opacity: 0.55;
+  }
+
+  .stage {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  .panel {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: var(--ink);
+    transition: flex 0.5s cubic-bezier(0.65, 0, 0.35, 1), background 0.5s ease;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .panel:hover { flex: 1.35; }
+
+  .panel-seek {
+    background: linear-gradient(160deg, #E4EAEE 0%, #D7E1E8 100%);
+  }
+  .panel-seek:hover { background: linear-gradient(160deg, #D9E4EC 0%, #C7D9E4 100%); }
+
+  .panel-offer {
+    background: linear-gradient(160deg, #EFE7DB 0%, #E9DBC7 100%);
+  }
+  .panel-offer:hover { background: linear-gradient(160deg, #F0E4D2 0%, #E6D3B8 100%); }
+
+  .panel-inner {
+    text-align: center;
+    padding: 0 40px;
+    transform: translateY(0);
+    transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  .panel:hover .panel-inner { transform: translateY(-8px); }
+
+  .eyebrow {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    margin-bottom: 18px;
+  }
+
+  .panel-seek .eyebrow { color: var(--seek-dark); }
+  .panel-offer .eyebrow { color: var(--offer-dark); }
+
+  .panel-title {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(52px, 9vw, 108px);
+    font-weight: 600;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+  }
+
+  .panel-desc {
+    margin-top: 20px;
+    font-size: 15px;
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.5;
+    color: var(--ink);
+    opacity: 0.68;
+  }
+
+  .cta-row {
+    margin-top: 34px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 13px 26px;
+    border-radius: 999px;
+    background: var(--ink);
+    color: var(--paper);
+    transition: transform 0.25s ease, background 0.25s ease;
+  }
+
+  .panel:hover .cta-row { transform: translateY(-2px); }
+  .panel-seek:hover .cta-row { background: var(--seek-dark); }
+  .panel-offer:hover .cta-row { background: var(--offer-dark); }
+
+  .arrow { transition: transform 0.3s ease; }
+  .panel:hover .arrow { transform: translateX(4px); }
+
+  /* Center seam */
+  .seam {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    bottom: 0;
+    width: 1px;
+    background: var(--line);
+    z-index: 5;
+    pointer-events: none;
+  }
+
+  .seam-mark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    z-index: 6;
+    pointer-events: none;
+  }
+
+  .footer-note {
+    position: fixed;
+    bottom: 24px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 12px;
+    color: var(--ink);
+    opacity: 0.45;
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  @media (max-width: 720px) {
+    .stage { flex-direction: column; }
+    .seam { top: 50%; bottom: auto; left: 0; right: 0; width: auto; height: 1px; }
+    .seam-mark { top: 50%; left: 50%; }
+    .panel:hover { flex: 1.15; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .panel, .panel-inner, .cta-row, .arrow { transition: none; }
+  }
+
+  a:focus-visible, .panel:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: -4px;
+  }
+</style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="brand">Bookloop</div>
+    <div class="tagline">Borrow something. Lend something.</div>
+  </div>
+
+  <div class="stage">
+    <!-- Both buttons redirect to the same view/template but pass a distinct flow type -->
+    <a href="{% url 'create_listing' %}?flow=seek" class="panel panel-seek" aria-label="Seek a skill">
+      <div class="panel-inner">
+        <div class="eyebrow">I want to borrow</div>
+        <div class="panel-title">Borrow</div>
+        <p class="panel-desc">Someone might have what you're looking for.</p>
+        <div class="cta-row">Find Here<span class="arrow">→</span></div>
+      </div>
+    </a>
+
+    <a href="{% url 'create_listing' %}?flow=offer" class="panel panel-offer" aria-label="Offer a skill">
+      <div class="panel-inner">
+        <div class="eyebrow">I want to lend</div>
+        <div class="panel-title">Offer</div>
+        <p class="panel-desc">Sharing books is like sharing knowlege</p>
+        <div class="cta-row">List an item<span class="arrow">→</span></div>
+      </div>
+    </a>
+  </div>
+
+  <div class="seam"></div>
+  <div class="seam-mark">⇌</div>
+
+</body>
+</html>

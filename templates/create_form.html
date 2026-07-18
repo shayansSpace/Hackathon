@@ -1,0 +1,310 @@
+<!-- create_form.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% if flow == 'seek' %}Seek Items{% else %}Offer Item{% endif %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #EAEEF2;
+    --ink: #182430;
+    --seek: #3B6E8F;
+    --seek-dark: #2C5470;
+    --seek-tint: #DCE6EC;
+    --offer: #C9762C;
+    --offer-dark: #A85F1E;
+    --offer-tint: #F1E3D0;
+    --line: #B8C4CC;
+    --accent: {% if flow == 'seek' %}var(--seek){% else %}var(--offer){% endif %};
+    --accent-dark: {% if flow == 'seek' %}var(--seek-dark){% else %}var(--offer-dark){% endif %};
+    --accent-tint: {% if flow == 'seek' %}var(--seek-tint){% else %}var(--offer-tint){% endif %};
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    min-height: 100%;
+    background: var(--paper);
+    font-family: 'Inter', sans-serif;
+    color: var(--ink);
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 28px 40px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .brand {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+
+  .brand span { color: var(--accent); }
+
+  .back-link {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    color: var(--ink);
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+  }
+
+  .back-link:hover { opacity: 1; }
+
+  main {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 64px 32px 100px;
+  }
+
+  .eyebrow {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--accent-dark);
+    margin-bottom: 14px;
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: clamp(34px, 5vw, 46px);
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+    margin-bottom: 12px;
+  }
+
+  .subtext {
+    font-size: 15px;
+    color: var(--ink);
+    opacity: 0.62;
+    max-width: 46ch;
+    margin-bottom: 44px;
+  }
+
+  /* ---- Search bar (Seek) ---- */
+  .search-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 48px;
+  }
+
+  .search-form input[type="text"] {
+    flex: 1;
+    padding: 14px 18px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+  }
+
+  .search-form input[type="text"]:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  .search-form button {
+    padding: 14px 28px;
+    border: none;
+    border-radius: 10px;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .search-form button:hover { background: var(--accent-dark); }
+
+  h3.section-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--ink);
+    opacity: 0.5;
+    margin-bottom: 18px;
+  }
+
+  .listings {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .listings li {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--accent);
+    border-radius: 8px;
+    padding: 16px 20px;
+    font-size: 15px;
+  }
+
+  .listings li strong {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 16px;
+  }
+
+  .listings li.empty {
+    border-left: 3px solid var(--line);
+    color: var(--ink);
+    opacity: 0.55;
+    font-style: normal;
+    text-align: center;
+    padding: 32px 20px;
+  }
+
+  .dept-tag {
+    display: inline-block;
+    margin-left: 10px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent-dark);
+    background: var(--accent-tint);
+    padding: 3px 9px;
+    border-radius: 999px;
+  }
+
+  /* ---- Offer form ---- */
+  form.offer-form p {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  form.offer-form label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink);
+    opacity: 0.6;
+  }
+
+  form.offer-form input,
+  form.offer-form select,
+  form.offer-form textarea {
+    padding: 13px 16px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+    width: 100%;
+  }
+
+  form.offer-form textarea { min-height: 110px; resize: vertical; }
+
+  form.offer-form input:focus,
+  form.offer-form select:focus,
+  form.offer-form textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  .submit-btn {
+    margin-top: 8px;
+    padding: 15px 32px;
+    border: none;
+    border-radius: 999px;
+    background: var(--accent);
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+
+  .submit-btn:hover {
+    background: var(--accent-dark);
+    transform: translateY(-1px);
+  }
+
+  @media (max-width: 560px) {
+    .header { padding: 22px 24px; }
+    main { padding: 40px 20px 80px; }
+    .search-form { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+    <div class="brand">Bookloop</div>
+    <a href="{% url 'dashboard' %}" class="back-link">← Back to Dashboard</a>
+</div>
+
+<main>
+
+    <!-- ========================================== -->
+    <!-- 1. SEEK FLOW INTERFACE                     -->
+    <!-- ========================================== -->
+    {% if flow == 'seek' %}
+        <div class="eyebrow">I want to learn</div>
+        <h1>Seek Books &amp; Lab Equipment</h1>
+        <p class="subtext">Search what's already been offered by department code, or browse everything below.</p>
+
+        <form method="GET" action="{% url 'create_listing' %}" class="search-form">
+            <input type="hidden" name="flow" value="seek">
+            <input type="text" name="dept_code" value="{{ query|default:'' }}" placeholder="Search by department code, e.g. CS-222">
+            <button type="submit">Search</button>
+        </form>
+
+        <h3 class="section-label">Available Listings</h3>
+        <ul class="listings">
+            {% for listing in listings %}
+                <li>
+                    <strong>{{ listing.title }}</strong>
+                    <span class="dept-tag">{{ listing.dept_code }}</span>
+                </li>
+            {% empty %}
+                <li class="empty">Nothing matches yet — try a different department code, or check back once someone offers it.</li>
+            {% endfor %}
+        </ul>
+
+    <!-- ========================================== -->
+    <!-- 2. OFFER FLOW INTERFACE                    -->
+    <!-- ========================================== -->
+    {% else %}
+        <div class="eyebrow">I want to teach</div>
+        <h1>Offer a Book or Lab Equipment</h1>
+        <p class="subtext">Fill in the details below so someone searching for it can find it.</p>
+
+        <form method="POST" action="{% url 'create_listing' %}" class="offer-form">
+            {% csrf_token %}
+            <input type="hidden" name="flow" value="offer">
+
+            {{ form.as_p }}
+
+            <button type="submit" class="submit-btn">Submit Offer</button>
+        </form>
+    {% endif %}
+
+</main>
+
+</body>
+</html>
